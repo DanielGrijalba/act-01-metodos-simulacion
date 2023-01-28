@@ -26,7 +26,7 @@ library(htmltools)
 library(plyr)
 library(DT)
 
-knitr::opts_chunk$set(fig.width = 6, fig.asp = 1 / 3)
+knitr::opts_chunk$set(fig.width = 5, fig.asp = 1 / 3)
 
 data("CarreraLuz22") 
 
@@ -139,7 +139,7 @@ colnames(ft1)=c("Categoría", "Frecuencia absoluta")
 ft1=flextable(ft1)
 
 set_flextable_defaults(
-  font.size = 15, font.family = "Helvetica",
+  font.size = 12, font.family = "Helvetica",
   font.color = "#333333",
   table.layout = "fixed",
   border.color = "gray",
@@ -147,8 +147,8 @@ set_flextable_defaults(
   padding.left = 4, padding.right = 4)
 
 ft1 <- ft1 %>%
-  width(j = 1,  width = 5) %>%
-  width(j = 2, width = 3)
+  width(j = 1,  width = 2) %>%
+  width(j = 2, width = 1)
 ft1
 
 ```
@@ -292,7 +292,7 @@ colnames(ft1H)=c("Categoría", "Frecuencia absoluta")
 ft1H=flextable(ft1H)
 
 set_flextable_defaults(
-  font.size = 15, font.family = "Helvetica",
+  font.size = 12, font.family = "Helvetica",
   font.color = "#333333",
   table.layout = "fixed",
   border.color = "gray",
@@ -300,8 +300,8 @@ set_flextable_defaults(
   padding.left = 4, padding.right = 4)
 
 ft1H <- ft1H %>%
-  width(j = 1,  width = 5) %>%
-  width(j = 2, width = 3)
+  width(j = 1,  width = 2) %>%
+  width(j = 2, width = 1)
 ft1H
 
 ```
@@ -418,7 +418,7 @@ colnames(ft1M)=c("Categoría", "Frecuencia absoluta")
 ft1M=flextable(ft1M)
 
 set_flextable_defaults(
-  font.size = 15, font.family = "Helvetica",
+  font.size = 12, font.family = "Helvetica",
   font.color = "#333333",
   table.layout = "fixed",
   border.color = "gray",
@@ -426,8 +426,8 @@ set_flextable_defaults(
   padding.left = 4, padding.right = 4)
 
 ft1M <- ft1M %>%
-  width(j = 1,  width = 5) %>%
-  width(j = 2, width = 3)
+  width(j = 1,  width = 2) %>%
+  width(j = 2, width = 1)
 ft1M
 
 ```
