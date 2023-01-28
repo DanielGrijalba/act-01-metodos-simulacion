@@ -1,0 +1,460 @@
+---
+title: "Actividad 1 - Carrera La Luz 2022"
+#author: "Daniel Grijalba"
+output: 
+  flexdashboard::flex_dashboard:
+    theme: paper
+    orientation: rows
+    vertical_layout: fill
+runtime: shiny
+---
+
+
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(paqueteMET)     # activar paqueteMET
+library(dygraphs)
+library(thematic)
+library(ggplot2)
+library(bslib)
+library(shiny)
+library(plotly)
+library(tidyverse)
+#library(dplyr)
+library(htmltools)
+library(plyr)
+library(DT)
+
+
+data("CarreraLuz22") 
+
+```
+
+
+# Análisis General 
+
+
+Column {data-width=50}
+-----------------------------------------------------------------------
+
+### compe
+
+```{r}
+
+compe <- nrow(CarreraLuz22)
+
+valueBox(compe,
+         caption = 'Total de Competidores',
+         icon = "fa-medal",
+         color="white")
+```
+
+
+### Chart 2
+
+```{r}
+
+sexs = prop.table(table(CarreraLuz22$sex))*100
+
+valueBox(round(sexs[1],1),
+         caption = '% de Hombres',
+         icon = "fa-user",
+         color="white")
+```
+
+### Chart 3
+
+```{r}
+
+valueBox(round(sexs[2],1),
+         caption = '% de Mujeres',
+         icon = "fas fa-female",
+         color="white")
+```
+
+
+### Chart 3
+
+```{r}
+
+valueBox(round(mean(CarreraLuz22$edad),1),
+         caption = 'Edad promedio',
+         icon = "fa-clock",
+         color="white")
+```
+
+### Chart 3
+
+```{r}
+
+valueBox(round(mean(CarreraLuz22$timerun/60),1),
+         caption = 'Tiempro promedio de los competidores (Min)',
+         icon = "far fa-hourglass",
+         color="white")
+```
+
+## 
+### Relación entre la edad y los tiempos de la carrera {data-width=8} 
+
+```{r}
+renderPlot({
+ggplot(CarreraLuz22, aes(y=edad , x=timerun/60, col=factor(sex)),alpha=0.5)+
+  geom_point() + theme_classic() +
+  labs(x="Tiempo (min)", 
+       y="Edad",
+       color=NULL)
+})
+``` 
+
+
+### Edad de los competidores {data-width=3}
+
+```{r}
+renderPlot({
+mu <- ddply(CarreraLuz22, "sex", summarise, grp.mean=mean(edad))
+
+ggplot(CarreraLuz22, aes(x=edad, fill=sex, color=sex)) +
+  theme_classic() + geom_histogram(position="identity", alpha = 0.5)+
+  labs(x="Edad", 
+       y="Frecuencia") + 
+  geom_vline(data=mu, aes(xintercept=grp.mean, color=sex),
+             linetype="dashed")
+
+
+})  
+  
+```
+
+##
+
+### Número de competidores por categoria {data-width=3}
+```{r}
+library(flextable)
+
+ft1=table(CarreraLuz22$categoria)%>% 
+  as.data.frame()
+colnames(ft1)=c("Categoría", "Frecuencia absoluta")
+ft1=flextable(ft1)
+
+set_flextable_defaults(
+  font.size = 15, font.family = "Helvetica",
+  font.color = "#333333",
+  table.layout = "fixed",
+  border.color = "gray",
+  padding.top = 3, padding.bottom = 3,
+  padding.left = 4, padding.right = 4)
+
+ft1 <- ft1 %>%
+  width(j = 1,  width = 5) %>%
+  width(j = 2, width = 3)
+ft1
+
+```
+### Ciudad de los competidores {data-width=6}
+
+```{r}
+CarreraLuz22$origen <- replace(CarreraLuz22$origen,CarreraLuz22$origen== "Bogotá", "Bogota")
+CarreraLuz22$origen <- replace(CarreraLuz22$origen,CarreraLuz22$origen== "Bogota D.c", "Bogota")
+
+CarreraLuz22$origen <- replace(CarreraLuz22$origen,CarreraLuz22$origen==  "Cali Valle", "Cali")
+CarreraLuz22$origen <- replace(CarreraLuz22$origen,CarreraLuz22$origen==  "Florida Va", "Florida")
+CarreraLuz22$origen <- replace(CarreraLuz22$origen,CarreraLuz22$origen==  "Jamundí", "Jamundi")
+CarreraLuz22$origen <- replace(CarreraLuz22$origen,CarreraLuz22$origen==  "Tuluá", "Tulua")
+CarreraLuz22$origen <- replace(CarreraLuz22$origen,CarreraLuz22$origen==  "Popayán", "Popayan")
+
+
+
+ft2=table(CarreraLuz22$origen)%>% 
+  as.data.frame()
+colnames(ft2)=c("Ciudad", "Frecuencia absoluta")
+
+ft2 %>%
+  DT::datatable(escape = FALSE, options = list(paging=FALSE))
+
+```
+
+
+
+### Distribución del tiempo de los tiempos de la carrera por genero {data-width=8}
+
+```{r}
+renderPlot({
+ggplot(data = CarreraLuz22) + geom_boxplot(aes(x=factor(sex),
+                                           y=timerun/60,
+                                           fill=factor(sex)),
+                                           outlier.color = "red",
+                                           outlier.shape = 16,
+                                           outlier.size = 1,
+                                           alpha=0.5) + theme_classic() + coord_flip() +
+  geom_jitter(aes(x = sex, y = timerun/60), 
+              size = 2,
+              alpha = 0.05,
+              width = 0.1)+
+  labs(x="Genero", 
+       y="Tiempo (min)",
+       color=NULL)+#scale_fill_manual(values=c("salmon", "cornflowerblue")) +
+  theme(legend.position="none")
+})
+```
+
+
+
+
+
+
+# Analisis para Hombres
+Column {data-width=50}
+-----------------------------------------------------------------------
+
+
+### compe
+
+```{r}
+dataH = subset(CarreraLuz22, CarreraLuz22$sex=="Hombre")
+
+
+compeH <- nrow(dataH)
+
+valueBox(compeH,
+         caption = 'Total de Competidores',
+         icon = "fa-medal",
+         color="white")
+```
+
+
+### Chart 3
+
+```{r}
+
+valueBox(round(mean(dataH$edad),1),
+         caption = 'Edad promedio',
+         icon = "fa-clock",
+         color="white")
+```
+
+### Chart 3
+
+```{r}
+
+valueBox(round(mean(dataH$timerun/60),1),
+         caption = 'Tiempro promedio de los competidores (Min)',
+         icon = "far fa-hourglass",
+         color="white")
+```
+
+
+
+## 
+
+### Tiempos de la carrera por categoria {data-width=8} 
+
+```{r}
+renderPlot({
+
+ggplot(dataH, aes(x=timerun/60, fill=categoria, color=categoria)) +
+  theme_classic() + geom_histogram(position="identity", alpha = 0.5)+
+  labs(x="Tiempo (min)", 
+       y="Frecuencia") 
+})
+``` 
+
+
+### Edad de los competidores {data-width=3}
+
+```{r}
+renderPlot({
+#muH <- ddply(dataH, "sex", summarise, grp.mean=mean(edad))
+
+ggplot(dataH, aes(x=edad, fill=categoria, color=categoria)) +
+  theme_classic() + geom_histogram(position="identity", alpha = 0.5)+
+  labs(x="Edad", 
+       y="Frecuencia") 
+#  geom_vline(data=muH, aes(xintercept=grp.mean),
+#             linetype="dashed")
+
+
+})  
+  
+```
+
+
+##
+
+### Número de competidores por categoria {data-width=3}
+```{r}
+library(flextable)
+
+ft1H=table(dataH$categoria)%>% 
+  as.data.frame()
+colnames(ft1H)=c("Categoría", "Frecuencia absoluta")
+ft1H=flextable(ft1H)
+
+set_flextable_defaults(
+  font.size = 15, font.family = "Helvetica",
+  font.color = "#333333",
+  table.layout = "fixed",
+  border.color = "gray",
+  padding.top = 3, padding.bottom = 3,
+  padding.left = 4, padding.right = 4)
+
+ft1H <- ft1H %>%
+  width(j = 1,  width = 5) %>%
+  width(j = 2, width = 3)
+ft1H
+
+```
+### Ciudad de los competidores {data-width=6}
+
+```{r}
+
+ft2H=table(dataH$origen)%>% 
+  as.data.frame()
+colnames(ft2H)=c("Ciudad", "Frecuencia absoluta")
+
+ft2H %>%
+  DT::datatable(escape = FALSE, options = list(paging=FALSE))
+
+```
+
+
+
+### Relación entre la edad y los tiempos de la carrera {data-width=8}
+
+```{r}
+
+renderPlot({
+ggplot(dataH, aes(y=edad , x=timerun/60, fill=categoria, color=categoria),alpha=0.5)+
+  geom_point() + theme_classic() +
+  labs(x="Tiempo (min)", 
+       y="Edad")
+})
+
+
+```
+
+
+
+
+# Analisis para Mujeres
+
+Column {data-width=50}
+-----------------------------------------------------------------------
+
+### compe
+
+```{r}
+dataM = subset(CarreraLuz22, CarreraLuz22$sex=="Mujer")
+
+
+compeM <- nrow(dataM)
+
+valueBox(compeM,
+         caption = 'Total de Competidores',
+         icon = "fa-medal",
+         color="white")
+```
+
+
+### Chart 3
+
+```{r}
+
+valueBox(round(mean(dataM$edad),1),
+         caption = 'Edad promedio',
+         icon = "fa-clock",
+         color="white")
+```
+
+### Chart 3
+
+```{r}
+
+valueBox(round(mean(dataM$timerun/60),1),
+         caption = 'Tiempro promedio de los competidores (Min)',
+         icon = "far fa-hourglass",
+         color="white")
+```
+
+
+## 
+### Tiempos de la carrera por categoria {data-width=8} 
+
+```{r}
+renderPlot({
+
+ggplot(dataM, aes(x=timerun/60, fill=categoria, color=categoria)) +
+  theme_classic() + geom_histogram(position="identity", alpha = 0.5)+
+  labs(x="Tiempo (min)", 
+       y="Frecuencia") 
+})
+``` 
+
+
+### Edad de los competidores {data-width=3}
+
+```{r}
+renderPlot({
+
+ggplot(dataM, aes(x=edad, fill=categoria, color=categoria)) +
+  theme_classic() + geom_histogram(position="identity", alpha = 0.5)+
+  labs(x="Edad", 
+       y="Frecuencia") 
+
+})  
+  
+```
+
+
+##
+### Número de competidores por categoria {data-width=3}
+```{r}
+library(flextable)
+
+ft1M=table(dataM$categoria)%>% 
+  as.data.frame()
+colnames(ft1M)=c("Categoría", "Frecuencia absoluta")
+ft1M=flextable(ft1M)
+
+set_flextable_defaults(
+  font.size = 15, font.family = "Helvetica",
+  font.color = "#333333",
+  table.layout = "fixed",
+  border.color = "gray",
+  padding.top = 3, padding.bottom = 3,
+  padding.left = 4, padding.right = 4)
+
+ft1M <- ft1M %>%
+  width(j = 1,  width = 5) %>%
+  width(j = 2, width = 3)
+ft1M
+
+```
+### Ciudad de los competidores {data-width=6}
+
+```{r}
+
+ft2M=table(dataM$origen)%>% 
+  as.data.frame()
+colnames(ft2M)=c("Ciudad", "Frecuencia absoluta")
+
+ft2M %>%
+  DT::datatable(escape = FALSE, options = list(paging=FALSE))
+
+```
+
+
+
+### Relación entre la edad y los tiempos de la carrera {data-width=8}
+
+```{r}
+
+renderPlot({
+ggplot(dataM, aes(y=edad , x=timerun/60, fill=categoria, color=categoria),alpha=0.5)+
+  geom_point() + theme_classic() +
+  labs(x="Tiempo (min)", 
+       y="Edad")
+})
+
+
+```
