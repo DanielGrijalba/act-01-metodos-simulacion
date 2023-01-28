@@ -1,52 +1,74 @@
 ---
-title: "Themed dashboard"
-output: 
+title: "test"
+output:
   flexdashboard::flex_dashboard:
-    theme:
-      bg: "#101010"
-      fg: "#FDF7F7" 
-      primary: "#ED79F9"
-      base_font:
-        google: Prompt
-      code_font:
-        google: JetBrains Mono
-    orientation: columns
-    vertical_layout: fill
+    orientation: rows
+    vertical_layout: scroll
 ---
 
-```{r setup, include=FALSE}
+
+```{r global, include=FALSE}
+
+library(rmarkdown)
 library(flexdashboard)
-# Install thematic and un-comment for themed static plots (i.e., ggplot2)
-# thematic::thematic_rmd()
+library(DT)
+
+
+# Helper function to download data
+create_dt <- function(x){
+  DT::datatable(x,
+                extensions = 'Buttons',
+                options = list(dom = 'Blfrtip',
+                               buttons = c('copy', 'csv', 'excel'),
+                               lengthMenu = list(c(10, 50, -1),
+                                                 c(10, 50, "All"))))
+}
+
+
 ```
 
-Column {data-width=650 .tabset}
------------------------------------------------------------------------
 
-### Chart A
+# Pairs {.tabset}
+Row
+----
+
+### Daily Active Users
 
 ```{r}
 
+plot(1:10, 1:10)
+
 ```
 
-### Chart B
+### Daily Trades
 
 ```{r}
 
+plot(1:10, 1:10)
+
 ```
 
-Column {data-width=350}
------------------------------------------------------------------------
+Row 
+----
 
-### Chart C
+### Daily Trades Per User
 
 ```{r}
 
+plot(1:10, 1:10)
+
 ```
 
-### Chart D
+### Daily Trading Volume
 
 ```{r}
 
+plot(1:10, 1:10)
+
 ```
 
+# Data
+
+```{r}
+create_dt(mtcars)
+```
