@@ -150,7 +150,9 @@ set_flextable_defaults(
 ft1 <- ft1 %>%
   width(j = 1,  width = 2) %>%
   width(j = 2, width = 1)
+
 ft1
+
 
 ```
 ### Ciudad de los competidores {data-width=6}
