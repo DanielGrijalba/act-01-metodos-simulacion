@@ -140,7 +140,7 @@ colnames(ft1)=c("Categoría", "Frecuencia absoluta")
 ft1=flextable(ft1)
 
 set_flextable_defaults(
-  font.size = 12, font.family = "Helvetica",
+  font.size = 10, font.family = "Helvetica",
   font.color = "#333333",
   table.layout = "fixed",
   border.color = "gray",
@@ -172,7 +172,7 @@ ft2=table(CarreraLuz22$origen)%>%
 colnames(ft2)=c("Ciudad", "Frecuencia absoluta")
 
 ft2 %>%
-  DT::datatable(escape = FALSE, options = list(paging=FALSE))
+  DT::datatable(escape = FALSE, options = list(paging=5))
 
 ```
 
@@ -293,7 +293,7 @@ colnames(ft1H)=c("Categoría", "Frecuencia absoluta")
 ft1H=flextable(ft1H)
 
 set_flextable_defaults(
-  font.size = 12, font.family = "Helvetica",
+  font.size = 10, font.family = "Helvetica",
   font.color = "#333333",
   table.layout = "fixed",
   border.color = "gray",
@@ -315,7 +315,7 @@ ft2H=table(dataH$origen)%>%
 colnames(ft2H)=c("Ciudad", "Frecuencia absoluta")
 
 ft2H %>%
-  DT::datatable(escape = FALSE, options = list(paging=FALSE))
+  DT::datatable(escape = FALSE, options = list(paging=5))
 
 ```
 
@@ -419,7 +419,7 @@ colnames(ft1M)=c("Categoría", "Frecuencia absoluta")
 ft1M=flextable(ft1M)
 
 set_flextable_defaults(
-  font.size = 12, font.family = "Helvetica",
+  font.size = 10, font.family = "Helvetica",
   font.color = "#333333",
   table.layout = "fixed",
   border.color = "gray",
@@ -441,7 +441,7 @@ ft2M=table(dataM$origen)%>%
 colnames(ft2M)=c("Ciudad", "Frecuencia absoluta")
 
 ft2M %>%
-  DT::datatable(escape = FALSE, options = list(paging=FALSE))
+  DT::datatable(escape = FALSE, options = list(paging=5))
 
 ```
 
