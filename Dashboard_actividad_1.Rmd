@@ -10,7 +10,6 @@ output:
 ---
 
 
-
 ```{r setup, include=FALSE}
 library(flexdashboard)
 library(paqueteMET)     # activar paqueteMET
@@ -31,7 +30,6 @@ library(DT)
 data("CarreraLuz22") 
 
 ```
-
 
 
 # Análisis General 
@@ -91,7 +89,7 @@ valueBox(round(mean(CarreraLuz22$edad),1),
 ```{r}
 
 valueBox(round(mean(CarreraLuz22$timerun/60),1),
-         caption = 'Tiempro promedio de los competidores (Min)',
+         caption = 'Tiempo promedio de los competidores (Min)',
          icon = "far fa-hourglass",
          color="white")
 ```
@@ -237,16 +235,36 @@ valueBox(round(mean(dataH$edad),1),
          color="white")
 ```
 
+### Chart min
+
+```{r}
+
+valueBox(round(min(dataH$timerun/60),1),
+         caption = 'Tiempo mínimo de los competidores (Min)',
+         icon = "far fa-hourglass",
+         color="white")
+```
+
+
 ### Chart 3
 
 ```{r}
 
 valueBox(round(mean(dataH$timerun/60),1),
-         caption = 'Tiempro promedio de los competidores (Min)',
+         caption = 'Tiempo promedio de los competidores (Min)',
          icon = "far fa-hourglass",
          color="white")
 ```
 
+### Chart max
+
+```{r}
+
+valueBox(round(max(dataH$timerun/60),1),
+         caption = 'Tiempo máximo de los competidores (Min)',
+         icon = "far fa-hourglass",
+         color="white")
+```
 
 
 ## 
@@ -374,12 +392,32 @@ valueBox(round(mean(dataM$edad),1),
 
 ```{r}
 
-valueBox(round(mean(dataM$timerun/60),1),
-         caption = 'Tiempro promedio de los competidores (Min)',
+valueBox(round(min(dataM$timerun/60),1),
+         caption = 'Tiempo minímo de los competidores (Min)',
          icon = "far fa-hourglass",
          color="white")
 ```
 
+
+### Chart 3
+
+```{r}
+
+valueBox(round(mean(dataM$timerun/60),1),
+         caption = 'Tiempo promedio de los competidores (Min)',
+         icon = "far fa-hourglass",
+         color="white")
+```
+
+### Chart 3
+
+```{r}
+
+valueBox(round(max(dataM$timerun/60),1),
+         caption = 'Tiempo máximo de los competidores (Min)',
+         icon = "far fa-hourglass",
+         color="white")
+```
 
 ## 
 ### Tiempos de la carrera por categoria {data-width=8} 
