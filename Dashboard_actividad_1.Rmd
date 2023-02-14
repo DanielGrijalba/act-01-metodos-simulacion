@@ -22,12 +22,57 @@ library(tidyverse)
 library(htmltools)
 library(plyr)
 library(DT)
-
+library(flextable)
 #knitr::opts_chunk$set(fig.width = 6, fig.asp = 1 / 3)
 
 
 
 data("CarreraLuz22") 
+
+```
+
+
+# Información 
+En el siguiente Dashboard se presentará un pequeño
+análisis con respecto a la Carrera la Luz del 2022 de la ciudad de Cali, en donde participaron personas de diferentes ciudades de Colombia y de diferentes países. Este carrera consto de un recorrido de aproximadamente 10k de kilómetros, en donde la edad mínima para competir era desde los 15 años.
+
+<div>
+<p style = 'text-align:center;'>
+<image src="C:/Users/Daniel Grijalba/Desktop/Maestria/Primer_semestre/Metodos_simulacion_estadistica/Unidad_1/mapa_carrera.jpg" alt="Ruta de la carrera" width="650px">
+</p>
+</div>
+
+
+El número total de participantes fue de 1.922, en donde el 61% (1.178) fueron hombres y el 39% (744) restante fueron mujeres.
+El tiempo promedio de los competidores masculinos fue de 62 minutos, en donde el competidor más rápido de ellos termino la carrera en 33 minutos y el más lento se demoró 166 minutos. Con respecto al tiempo promedio de las competidores femeninas, este fue de 70.4 minutos,
+la competidora más rápida termino la carrera en 39.2 minutos y la más lenta se demoró 111 minutos.
+
+Por otra parte, esta carrera conto con 5 categorías, cada una tenía se limite inferior y superior de edad, en donde se puede observar que a mayor edad, los tiempos en minutos que se demorar en terminar la carrera aumentaban:
+
+```{r}
+
+df_2 <- ddply(CarreraLuz22, "categoria", summarise,
+            edad_min=min(edad),
+            edad_max=max(edad),
+            tiempo_min  = round(min(timerun/60, na.rm = TRUE),2) ,
+            tiempo_max = round(max(timerun/60, na.rm = TRUE),2))
+
+colnames(df_2)=c("Categoría", "Edad mínima", "Edad máxima", "Tiempo mínimo", "Tiempo Máximo")
+df_2=flextable(df_2)
+
+set_flextable_defaults(
+  font.size = 10, font.family = "Helvetica",
+  font.color = "#333333",
+  table.layout = "fixed",
+  border.color = "gray",
+  padding.top = 3, padding.bottom = 3,
+  padding.left = 4, padding.right = 4)
+
+df_2 <- df_2 %>%
+  width(j = 1,  width = 2) %>%
+  width(j = 2, width = 1)
+
+df_2
 
 ```
 
@@ -95,7 +140,8 @@ valueBox(round(mean(CarreraLuz22$timerun/60),1),
 ```
 
 ## 
-### Relación entre la edad y los tiempos de la carrera {data-width=8} 
+
+### Relación entre la edad y los tiempos de la carrera {data-width=7} 
 
 ```{r fig.width=10}
 #renderPlot({
@@ -130,7 +176,7 @@ ggplot(CarreraLuz22, aes(x=edad, fill=sex, color=sex)) +
 
 ### Número de competidores por categoria {data-width=3}
 ```{r}
-library(flextable)
+
 
 ft1=table(CarreraLuz22$categoria)%>% 
   as.data.frame()
